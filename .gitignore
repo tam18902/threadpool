@@ -1,0 +1,54 @@
+# CMake build directories
+/build/
+*/build/
+CMakeFiles/
+CMakeCache.txt
+CMakeError.log
+CMakeOutput.log
+
+# Compiled object files
+*.o
+*.obj
+
+# Compiled binary files
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# IDE specific files
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.idea/
+*.iml
+
+# Mac OS X specific files
+.DS_Store
+
+# Backup files
+*~
+*.bak
+
+# Other system files
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# Logs
+*.log
+
+# Other generated files
+*.tgz
+*.tar.gz
+*.zip
