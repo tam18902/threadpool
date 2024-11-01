@@ -34,9 +34,9 @@ void Client::sendMessages() {
     std::string message;
     while (true) {
         // Get message from user
-        // std::cout << "Enter message to send: ";
-        // std::getline(std::cin, message);
-        message = "Hello - " + std::to_string(rand());
+        std::cout << "Enter message to send: ";
+        std::getline(std::cin, message);
+        // message = "Hello - " + std::to_string(rand());
         // Send the message to the server
         send(client_socket, message.c_str(), message.length(), 0);
         std::cout << "Message sent to server: " << message << std::endl;

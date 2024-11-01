@@ -10,7 +10,6 @@
 #include <condition_variable>
 #include <chrono>
 #include <atomic>
-#include <cstring>
 #include <arpa/inet.h>    // For socket operations (Linux/Unix-specific)
 #include <unistd.h>       // For close()
 #include <sys/socket.h>   // For socket functions
@@ -27,46 +26,41 @@ class Server;
 // Placeholder for client connection, job, and status handling
 struct ClientJob {
     int client_socket;
-    JobType job_type;   // Type of job (SEND, RECEIVE, BROADCAST)
-    std::string message; // Message to send or broadcast
+    JobType job_type;   // Type of job (SEND, RECEIVE)
+    std::string message;    // String store message for sending or received message
 };
 
 class ThreadPool {
 public:
-    ThreadPool(size_t num_threads, Server* server_instance) : server(server_instance), stop(false) {
-        for (size_t i = 0; i < num_threads; ++i) {
-            workers.emplace_back(&ThreadPool::workerThread, this);
-        }
-    }
+    ThreadPool(size_t num_threads, long sec_timeout, Server* server_instance);
+    ~ThreadPool();
 
-    ~ThreadPool() {
-        stop = true;
-        condition.notify_all();
-        for (auto &thread : workers) {
-            if (thread.joinable()) {
-                thread.join();
-            }
-        }
-    }
-
-    void addJob(ClientJob job) {
-        {
-            std::unique_lock<std::mutex> lock(queue_mutex);
-            jobQueue.push(std::move(job));
-        }
-        condition.notify_one();
-    }
+    // Public method for enqueue job
+    void addJob(ClientJob job);
 
 private:
+    // server instance for call back to send broadcast message
     Server* server;
+
+    // Handle worker thread
     std::vector<std::thread> workers;
+    
+    // Queue job need to be handle
     std::queue<ClientJob> jobQueue;
     std::mutex queue_mutex;
+    
+    // Struct set timeout for socket
+    struct timeval timeout;
+
+    // Condition and stop - bool value for waiting and notify 
+    // for worker know when need to wake or stop
     std::condition_variable condition;
     std::atomic<bool> stop;
 
+    // What worker do
     void workerThread();
 
+    // When job really handle
     void processJob(ClientJob &job);
 };
 

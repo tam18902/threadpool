@@ -1,12 +1,11 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <algorithm>
-#include "threadpool.h" // Include your thread pool header
+#include "threadpool.h"
 
 class Server {
 public:
-    Server(size_t num_threads);
+    Server(size_t num_threads, long timeout);
 
     bool initialize();
     
@@ -18,11 +17,15 @@ public:
 
     void removeClientSocket(int client_socket);
 private:
-    ThreadPool pool;
-    int server_fd; // Server file descriptor
     const int PORT = 8080;
-    std::vector<int> clientSockets; // List of client sockets
-    std::mutex clients_mutex; // Mutex for client management
+    int server_fd; // Server file descriptor
+    
+    // ThreadPool where to add job for workings
+    ThreadPool pool;
+
+    // List of client sockets - Mutex for client management
+    std::vector<int> clientSockets; 
+    std::mutex clients_mutex; 
 };
 
 #endif // SERVER_H

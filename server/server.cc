@@ -1,6 +1,7 @@
+#include <algorithm>
 #include "server.h"
 
-Server::Server(size_t num_threads) : pool(num_threads, this), server_fd(-1) {}
+Server::Server(size_t num_threads, long timeout) : pool(num_threads, timeout, this), server_fd(-1) {}
 
 bool Server::initialize() {
     // Create a TCP socket
